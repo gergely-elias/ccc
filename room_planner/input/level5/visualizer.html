@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="This is a visualizer for the 40th CCC, classic edition. Use this to help verify your solutions! To use it, open this file in your browser.">
+    <title>CCC | Room planner</title>
+</head>
+
+<body>
+<header>
+    <div>
+        <h1>Room plan visualizer</h1>
+        <p>This is an interactive tool to help you <strong>visualize</strong> your solutions and <strong>prototype</strong> them.</p>
+        <p>Note that it does <em>not perform any validation</em> for the correctness of the solution.</p>
+        <p>You are free to change it and use it as you see fit!</p>
+        <p><em>Try clicking on the grid below.</em></p>
+    </div>
+    <div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="39 48 384 284" width="200" id="codinator">
+            <polygon fill="#fddd00" points="
+                        59.65 53.93 52.5 53.93 52.5 61.08 59.65 61.08 66.8 61.08 66.8 53.93 59.65 53.93
+                    "/>
+            <polygon fill="#fddd00" points="
+                        173.98 311.18 173.98 318.33 181.13 318.33
+                        181.13 311.18 181.13 304.04 181.13 296.89
+                        173.98 296.89 173.98 304.04 173.98 311.18
+                    "/>
+            <rect fill="#fddd00" x="181.13" y="318.33" width="7.15" height="7.15"/>
+            <polygon fill="#fddd00" points="
+                        409.79 61.08 409.79 53.93 402.65 53.93 395.5 53.93 395.5 61.08 402.65 61.08 409.79 61.08
+                    "/>
+            <path fill="#fddd00" d="
+                        m409.79,103.95v-14.29h-7.15v-14.29h-7.15v-14.29h-7.15v7.15h-7.15v14.29h7.15v7.15h7.15v14.29h7.15
+                        v21.44h-7.15v7.15h-7.15v7.15h-71.46v7.15h-21.44v7.15h-14.29v7.15h-7.15v-7.15h-14.29v-7.15h-57.17
+                        v7.15h-14.29v7.15h-7.15v-7.15h-14.29v-7.15h-21.44v-7.15h-71.46v-7.15h-7.15v-7.15h-7.15v-21.44h7.15
+                        v-14.29h7.15v-7.15h7.15v-14.29h-7.15v-7.15h-7.15v14.29h-7.15v14.29h-7.15v14.29h-7.15v42.87h7.15
+                        v7.15h7.15v7.15h35.73v7.15h35.73v7.15h7.15v7.15h7.15v28.58h7.15v7.15h7.15v42.87h7.15v35.73h7.15
+                        v-7.15h7.15v-7.15h28.58v-7.15h14.29v-7.15h14.29v7.15h14.29v7.15h28.58v7.15h7.15v7.15h7.15
+                        v-35.73h7.15v-42.87h7.15v-7.15h7.15v-28.58h7.15v-7.15h7.15v-7.15h35.73v-7.15h35.73v-7.15h7.15
+                        v-7.15h7.15v-42.87h-7.15Zm-128.62,128.62v14.29h-7.15v7.15h-28.58v-14.29h14.29v-7.15h14.29
+                        v-7.15h7.15v7.15Zm-71.46,21.44h-21.44v-7.15h-7.15v-21.44h7.15v7.15h14.29v7.15h14.29v14.29h-7.15Z
+                    "/>
+            <polygon fill="#fddd00" points="
+                         281.17 304.04 281.17 311.18 281.17 318.33
+                         288.32 318.33 288.32 311.18 288.32 304.04
+                         288.32 296.89 281.17 296.89 281.17 304.04
+                    "/>
+            <rect fill="#fddd00" x="274.02" y="318.33" width="7.15" height="7.15"/>
+        </svg>
+    </div>
+</header>
+<main>
+    <div id="controls">
+        <div class="controls-column">
+            <div class="labeled-control">
+                <label for="level-input">Input</label>
+                <textarea id="level-input"
+                          cols="8" rows="1" maxlength="9999999"
+                          placeholder="Paste your level input here"
+                ></textarea>
+            </div>
+            <div class="labeled-control">
+                <button id="clear-solution-button">DELETE ALL DESKS</button>
+                <label for="clear-solution-button"><small>ALT + DELETE</small></label>
+            </div>
+            <div class="labeled-control">
+                <label for="rotate-desk-button">
+                    <span>Desk Orientation:</span>
+                    <strong id="desk-orientation">Horizontal</strong>
+                </label>
+                <button id="rotate-desk-button">ROTATE DESK</button>
+                <label for="rotate-desk-button">
+                    <small>Key R <em>OR</em> Right-Click on grid</small>
+                </label>
+            </div>
+            <div id="controls-desk-size" class="labeled-control">
+                <label for="desk-size">Desk Size</label>
+                <div>
+                    <button id="desk-size-decrement">-</button>
+                    <select id="desk-size">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                    </select>
+                    <button id="desk-size-increment">+</button>
+                </div>
+                <label for="desk-size"><small>Keys 1-7 <em>OR</em> -/+</small></label>
+            </div>
+            <div id="stats">
+                <span id="stats-label"></span>
+                <span id="stats-number">123</span>
+            </div>
+        </div>
+        <div class="labeled-control">
+            <label for="level-solution">Solution</label>
+            <textarea id="level-solution"
+                      cols="50" rows="16"
+                      placeholder="Your solution"
+            ></textarea>
+            <label for="level-solution"><small>Paste or drag and drop file</small></label>
+        </div>
+    </div>
+    <div id="tiles-svg-container"></div>
+</main>
+</body>
+
+<style>
+    html {
+        color-scheme: dark;
+        background-color: #27272a;
+        font-family: Arial, serif;
+    }
+
+    body {
+        margin: 0;
+        padding: 1rem 2rem 0 2rem;
+    }
+
+    h1 {
+        color: #fddd00;
+        margin: 1rem 0;
+    }
+
+    p, label {
+        margin: 0;
+    }
+
+    small {
+        color: lightgray;
+    }
+
+    strong {
+        color: #fddd00;
+    }
+
+    textarea {
+        background: #27272a;
+        outline: none;
+        border: 2px solid white;
+        border-radius: 5px;
+        padding: 0.5rem;
+    }
+
+    button, select {
+        min-width: 3rem;
+        min-height: 3rem;
+        border: 2px solid #fddd00;
+        border-radius: 5px;
+        font-family: monospace;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    button {
+        background: #fddd00;
+        color: black;
+    }
+
+    select {
+        background: #27272a;
+        padding: 0.5rem;
+    }
+
+    header {
+        padding-bottom: 1rem;
+        display: flex;
+    }
+
+    #controls {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .controls-column {
+        width: 14rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    #level-input {
+        resize: none;
+        min-width: 10rem;
+    }
+
+    .labeled-control {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    #stats {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    #stats-number {
+        color: #fddd00;
+    }
+
+    #tiles-svg-container {
+        width: fit-content;
+        height: fit-content;
+        margin-top: 0.5rem;
+
+        & svg {
+            background-color: #27272a;
+            border: 32px solid #888888;
+
+            > rect[is-desk="true"] {
+                fill: #fddd00
+            }
+
+            > rect[is-desk="false"] {
+                fill: transparent;
+            }
+
+            > rect[highlighted="true"][is-desk="false"] {
+                fill: #0000ff;
+            }
+
+            > rect[highlighted="true"][is-desk="true"] {
+                fill: #ff0000;
+            }
+
+            > rect[is-desk="true"]:hover {
+                cursor: not-allowed;
+            }
+
+            > rect[is-desk="false"]:hover {
+                cursor: cell;
+            }
+        }
+    }
+
+    #codinator {
+        cursor: help;
+    }
+</style>
+
+<script>
+    /**
+     * @typedef GlobalState
+     * @type {object}
+     * @property {GameState} game - Container for all game related data.
+     * @property {number} level - Game level.
+     */
+
+    /**
+     * @typedef GameState
+     * @type {object}
+     * @property {number} maxCols - The maximum width of the room in tiles.
+     * @property {number} maxRows - The maximum height room in tiles.
+     * @property {number} cols - The width of the room in tiles.
+     * @property {number} rows - The height room in tiles.
+     * @property {number} deskCountNeeded - The maximum number of desks that can fit in this room.
+     * @property {number} deskSize - The length of a desk in tiles.
+     * @property {number} deskRotation - The rotation of the desk brush.
+     * @property {Array.<Array.<number>>} tiles - Map of the room.
+     * @property {TilePosition} hoverPosition - Last tile position the mouse was on.
+     * @property {Array.<HTMLElement>} highlightedElements - List of elements that are currently selected.
+     */
+
+    /**
+     * @typedef TilePosition
+     * @type {object}
+     * @type {number} col - Cell X coordinate.
+     * @type {number} row - Cell Y coordinate.
+     */
+
+    /** @type {GlobalState} */
+    const state = {
+        level: 5,
+        game: {
+            maxCols: 200,
+            maxRows: 200,
+            cols: 200,
+            rows: 200,
+            deskCountNeeded: 0,
+            deskSize: 2,
+            deskRotation: 0,
+            tiles: [],
+            hoverPosition: {col: 0, row: 0},
+            highlightedElements: [],
+        }
+    };
+
+    /** @type {number} tileSize - The size of a tile in pixels. */
+    const tileSize = 32;
+
+    /** @constant {number} */
+    const DESK_SIZE_MIN = 1;
+
+    /** @constant {number} */
+    const DESK_SIZE_MAX = 7;
+
+    const levelInput = document.getElementById('level-input');
+    const clearSolutionButton = document.getElementById('clear-solution-button')
+    const deskOrientationLabel = document.getElementById('desk-orientation')
+    const rotateDeskButton = document.getElementById('rotate-desk-button')
+    const controlsDeskSize = document.getElementById('controls-desk-size');
+    const deskSizeInput = document.getElementById('desk-size');
+    const deskSizeDecrement = document.getElementById('desk-size-decrement')
+    const deskSizeIncrement = document.getElementById('desk-size-increment')
+    const statsLabel = document.getElementById('stats-label');
+    const statsNumber = document.getElementById('stats-number');
+    const levelSolution = document.getElementById('level-solution');
+    const deskSvgContainer = document.getElementById('tiles-svg-container');
+    const codinator = document.getElementById('codinator');
+
+    state.game.tiles = createArray2D(state.game.maxCols + 2, state.game.maxRows + 2);
+
+    if (state.level <= 4) {
+        defaultLevel4Solution();
+        setDeskSize(3);
+    } else {
+        defaultSpiralSolution();
+        if (state.level === 5) {
+            setDeskSize(2);
+        }
+    }
+    if (state.level < 6) {
+        controlsDeskSize.setAttribute('style', 'display: none;');
+    }
+
+    window.addEventListener('keydown', onKeydown);
+    window.addEventListener('keyup', onKeyup);
+    levelInput.addEventListener('input', () => updateInputField())
+    clearSolutionButton.addEventListener('click', () => clearSolution())
+    rotateDeskButton.addEventListener('click', () => deskBrushRotate())
+    deskSizeInput.addEventListener('input', () => onDeskSizeSelectInput())
+    deskSizeDecrement.addEventListener('click', () => onDeskSizeDecrement())
+    deskSizeIncrement.addEventListener('click', () => onDeskSizeIncrement())
+    levelSolution.addEventListener('input', () => updateSolutionField())
+    levelSolution.addEventListener('drop', onSolutionDrop);
+    codinator.addEventListener('mousedown', () => logoSolution())
+
+    /**
+     * Update the targeted positions with an <code>'X' (isDesk)</code> or a <code>'.' (!isDesk)</code>.
+     * @param {Array.<TilePosition>} tilePositions - The positions to update on the grid
+     * @param {boolean} isDesk - The value of the targeted positions.
+     */
+    function updateSolution(tilePositions, isDesk) {
+        const solutionChar = isDesk ? 'X' : '.';
+
+        let normalizedValue = normalizeSolution(sanitizeInput(levelSolution.value));
+        for (const {col, row} of tilePositions) {
+            const tileIndex = ((state.game.cols + 1) * (row - 1)) + (col - 1);
+            normalizedValue = normalizedValue.substring(0, tileIndex) + solutionChar + normalizedValue.substring(tileIndex + 1);
+        }
+        levelSolution.value = normalizedValue
+
+        parseSolutionAndUpdateState();
+        populateSvgWithTileValues();
+    }
+
+    /** Measure tile desk and set tile counts and update the UI with the information. */
+    function updateCounters() {
+        if (state.game.rows === 0 || state.game.cols === 0) {
+            return;
+        }
+        const {rows, cols, tiles} = state.game;
+
+        let deskTileCount = 0;
+        let desks = {};
+        for (let row = 1; row <= rows; ++row) {
+            for (let col = 1; col <= cols; ++col) {
+                const tile = tiles[row][col];
+                if (tile > 0) {
+                    ++deskTileCount;
+                    if (!desks[tile]) {
+                        desks[tile] = 0;
+                    }
+                    desks[tile] += 1;
+                }
+            }
+        }
+
+        if (state.level === 7) {
+            statsLabel.textContent = 'Occupied cell count: ';
+            statsNumber.textContent = `${deskTileCount}`;
+        } else {
+            statsLabel.textContent = 'Desk count: ';
+            statsNumber.textContent = `${Object.keys(desks).length}`;
+        }
+    }
+
+    // Input functions
+
+    /**
+     * Handle the level input and update the game state with room data.
+     */
+    function updateInputField() {
+        parseInputAndUpdateState();
+        recalculateSolutionFromState();
+        createSvg();
+    }
+
+    /**
+     * Parse the input values and update the state.
+     */
+    function parseInputAndUpdateState() {
+        const parts = sanitizeInput(levelInput.value).split(" ");
+
+        // Parse input with fallback values
+        if (parts.length >= 1) {
+            state.game.cols = Math.min(Number.parseInt(parts[0]) || 0, 200);
+        } else {
+            state.game.cols = 0;
+        }
+        if (parts.length >= 2) {
+            state.game.rows = Math.min(Number.parseInt(parts[1]) || 0, 200);
+        } else {
+            state.game.rows = 0;
+        }
+        if (parts.length >= 3) {
+            state.game.deskCountNeeded = Number.parseInt(parts[2]);
+        } else {
+            state.game.deskCountNeeded = 0;
+        }
+        if (parts.length >= 4) {
+            state.game.deskSize = clamp(Number.parseInt(parts[3]) || 0, DESK_SIZE_MIN, DESK_SIZE_MAX);
+        }
+        if (!state.game.deskSize || state.game.deskSize < 1) {
+            state.game.deskSize = DESK_SIZE_MIN;
+        }
+
+        deskSizeInput.value = `${state.game.deskSize}`;
+    }
+
+    /**
+     * Handle the solution input and update the game state with desk data.
+     */
+    function updateSolutionField() {
+        parseSolutionAndUpdateState();
+        recalculateInputFromState();
+        parseInputAndUpdateState();
+        if (state.level >= 6) {
+            recalculateDeskSizeFromState();
+        }
+        createSvg();
+    }
+
+    /**
+     * Parse the string solution and update the internal state.
+     * Also update the input with the new, deduced, values.
+     */
+    function parseSolutionAndUpdateState() {
+        const normalizedSolution = normalizeSolution(sanitizeInput(levelSolution.value));
+        if (normalizedSolution.length === 0) {
+            return;
+        }
+
+        const lines = normalizedSolution.split('\n');
+        state.game.rows = lines.length;
+        state.game.cols = lines[0].length;
+        const tiles = createArray2D(state.game.maxCols + 2, state.game.maxRows + 2, 0);
+        for (let row = 1; row <= state.game.rows; ++row) {
+            const line = lines[row - 1];
+            for (let col = 1; col <= state.game.cols; ++col) {
+                tiles[row][col] = (line[col - 1] === '.') ? 0 : -1;
+            }
+        }
+        tileMapLabel(tiles, state.game.cols, state.game.rows);
+        copyArray2D(state.game.tiles, tiles, 1, state.game.cols, 1, state.game.rows);
+
+        updateCounters();
+    }
+
+    /**
+     * Goes through the tile map and replaces all adjacent occurrences of <code>-1</code> with an id starting from 0.
+     * The id increments when it finds another fully adjacent group of values.
+     * @param {Array.<Array.<number>>} tiles - The tile map. Should be padded with 1 layer.
+     * @param {number} cols - The number of columns in the tile map.
+     * @param {number} rows - The number of rows in the tile map.
+     */
+    function tileMapLabel(tiles, cols, rows) {
+        let lastId = 0;
+        for (let row = 1; row <= rows; ++row) {
+            for (let col = 1; col <= cols; ++col) {
+                const tileValue = tiles[row][col];
+                if (tileValue === -1) {
+                    tilesFloodFill(tiles, col, row, ++lastId);
+                }
+            }
+        }
+    }
+
+    /**
+     * Goes through the adjacent cells of the provided position and replaces all occurrences with <code>id</code>.
+     * @param {Array.<Array.<number>>} tiles - The tile map. Should be padded with 1 layer.
+     * @param {number} col - The starting column.
+     * @param {number} row - The starting row.
+     * @param {number} id - The id to replace -1 with.
+     */
+    function tilesFloodFill(tiles, col, row, id) {
+        tiles[row][col] = id;
+        for (let r = row - 1; r <= row + 1; ++r) {
+            for (let c = col - 1; c <= col + 1; ++c) {
+                const tileValue = tiles[r][c];
+                if (tileValue === -1) {
+                    tilesFloodFill(tiles, c, r, id);
+                }
+            }
+        }
+    }
+
+    /**
+     * Find the desk that is used most times.
+     * @param {Array.<Array.<number>>} tiles - The tile map. Should be padded with 1 layer.
+     * @param {number} cols - The number of columns in the tile map.
+     * @param {number} rows - The number of rows in the tile map.
+     * @returns {number | null} The most commonly used desk size or null if there is no desk.
+     */
+    function tileMapGetMostCommonDesk(tiles, cols, rows) {
+        const deskIdToSize = {};
+        for (let row = 1; row <= rows; ++row) {
+            for (let col = 1; col <= cols; ++col) {
+                const tileValue = tiles[row][col];
+                if (tileValue > 0) {
+                    deskIdToSize[tileValue] = (deskIdToSize[tileValue] || 0) + 1;
+                }
+            }
+        }
+        const deskSizes = Object.values(deskIdToSize);
+        if (deskSizes.length === 0) {
+            return null;
+        }
+
+        const deskSizeOccurrences = {};
+        for (const value of deskSizes) {
+            deskSizeOccurrences[value] = (deskSizeOccurrences[value] || 0) + 1;
+        }
+        const deskSizeOccurrencesEntriesSorted = Object.entries(deskSizeOccurrences)
+        deskSizeOccurrencesEntriesSorted.sort(([id0, count0], [id1, count1]) => (count1 - count0) || (id1 - id0));
+
+        return Number.parseInt(deskSizeOccurrencesEntriesSorted[0][0]);
+    }
+
+    /** Set the desk size depending on what is most used. */
+    function recalculateDeskSizeFromState() {
+        const mostCommonlyUsed = tileMapGetMostCommonDesk(state.game.tiles, state.game.cols, state.game.rows);
+        if (mostCommonlyUsed) {
+            setDeskSize(clamp(mostCommonlyUsed, DESK_SIZE_MIN, DESK_SIZE_MAX));
+        }
+    }
+
+    /** Rotate the desk brush by 90 degrees. */
+    function deskBrushRotate() {
+        state.game.deskRotation = (state.game.deskRotation + 1) % 4;
+        deskOrientationLabel.textContent = (state.game.deskRotation % 2 === 0) ? 'Horizontal' : 'Vertical';
+    }
+
+    /** Input handler for the desk size increment button. */
+    function onDeskSizeIncrement() {
+        setDeskSize(Math.min(state.game.deskSize + 1, DESK_SIZE_MAX));
+    }
+
+    /** Input handler for the desk size decrement button. */
+    function onDeskSizeDecrement() {
+        setDeskSize(Math.max(state.game.deskSize - 1, DESK_SIZE_MIN));
+    }
+
+    /**
+     * Input handler for the desk size selector.
+     */
+    function onDeskSizeSelectInput() {
+        state.game.deskSize = clamp(Number.parseInt(deskSizeInput.value), DESK_SIZE_MIN, DESK_SIZE_MAX);
+        recalculateInputFromState();
+    }
+
+    /**
+     * Sets the desk size (value being used as brush size in the SVG interaction).
+     * @param {number} value - The new brush size.
+     */
+    function setDeskSize(value) {
+        state.game.deskSize = clamp(value, DESK_SIZE_MIN, DESK_SIZE_MAX);
+        deskSizeInput.value = `${state.game.deskSize}`;
+        recalculateInputFromState();
+    }
+
+    /**
+     * Event handler function for the solution textarea 'ondrop'.
+     * @param {DragEvent} event - the event generated by dropping something on the field.
+     */
+    function onSolutionDrop(event) {
+        event.preventDefault();
+        const file = event.dataTransfer.files[0];
+        const reader = new FileReader();
+        reader.onload = () => {
+            levelSolution.value = reader.result;
+            updateSolutionField();
+        }
+        reader.readAsText(file, 'UTF-8');
+    }
+
+    // Graphics
+
+    /**
+     * Event handler for 'keyup'.
+     *
+     * Ignores all events coming from <textarea> elements.
+     * @param {KeyboardEvent} event - The key event produced when the window is focused.
+     */
+    function onKeydown(event) {
+        if (event.target.nodeName === 'TEXTAREA') {
+            return;
+        }
+        const {col, row} = state.game.hoverPosition;
+
+        if (event.key === 'Control') {
+            if (state.game.highlightedElements.length > 0) {
+                highlightSelection({col, row}, true);
+            }
+        } else if (event.code.startsWith('Digit')) {
+            const digit = Number.parseInt(event.key);
+            if (1 <= digit && digit <= 7) {
+                setDeskSize(digit);
+                highlightSelection({col, row}, false);
+            }
+        } else if (event.key === '-') {
+            onDeskSizeDecrement();
+            highlightSelection({col, row}, false);
+        } else if (event.key === '+') {
+            onDeskSizeIncrement();
+            highlightSelection({col, row}, false);
+        } else if (event.key === 'r') {
+            deskBrushRotate();
+            highlightSelection({col, row}, false);
+        } else if (event.key === 'Delete' && event.altKey) {
+            clearSolution();
+        }
+    }
+
+    /**
+     * Event handler for 'keyup'.
+     * @param {KeyboardEvent} event - The key event produced when the window is focused.
+     */
+    function onKeyup(event) {
+        if (event.key === 'Control') {
+            if (state.game.highlightedElements.length > 0) {
+                const {col, row} = state.game.hoverPosition;
+                highlightSelection({col, row});
+            }
+        }
+    }
+
+    function svgOnContextMenu(event) {
+        event.preventDefault()
+    }
+
+    /**
+     * Event handler for SVG 'mousedown'.
+     *
+     * Left-click - perform the operation on the highlighted elements: Place a desk of length {@link state.game.deskSize}
+     * starting from the empty selected grid cell OR remove the desk that touches the selected grid cell.
+     *
+     * Right-click - Rotate the direction the desk would have been placed at.
+     * @param {MouseEvent} event - The mouse event produced by the SVG.
+     */
+    function svgOnMousedown(event) {
+        const {col, row} = getTilePositionFromElement(event.target);
+        state.game.hoverPosition = {col, row};
+        if (!isNaN(col) && !isNaN(row)) {
+            highlightSelection({col, row});
+            if (event.button === 0) {
+                const tilePositionsToBeCleared = event.ctrlKey
+                    ? [{col, row}]
+                    : state.game.highlightedElements.map((element) => getTilePositionFromElement(element));
+                const tileDeskId = state.game.tiles[row][col];
+                const tileIsDesk = tileDeskId > 0;
+                updateSolution(tilePositionsToBeCleared, !tileIsDesk);
+            } else if (event.button === 2) {
+                deskBrushRotate();
+            }
+            highlightSelection({col, row});
+        }
+    }
+
+
+    /**
+     * Event handler for SVG 'mouseover'.
+     *
+     * Highlight the relevant elements to indicate what the click operation will do.
+     * @param {MouseEvent} event - The mouse event produced by the SVG.
+     */
+    function svgOnMouseover(event) {
+        const {col, row} = getTilePositionFromElement(event.target);
+        state.game.hoverPosition = {col, row};
+        if (!isNaN(col) && !isNaN(row)) {
+            highlightSelection({col, row}, event.ctrlKey);
+        }
+    }
+
+    /**
+     * Event handler for SVG 'mouseout'.
+     *
+     * reset the highlight when the mouse goes out of the svg.
+     */
+    function svgOnMouseout() {
+        state.game.hoverPosition = {col: 0, row: 0};
+        highlightSelection();
+    }
+
+    /**
+     * Create and update the SVG element representing the internal state.
+     *
+     * Attach event listeners to interact with the SVG.
+     */
+    function createSvg() {
+        const {cols, rows} = state.game;
+
+        const width = cols * tileSize;
+        const height = rows * tileSize;
+        const svg = createSvgElement('svg', {width, height});
+
+        for (let row = 0; row <= rows; ++row) {
+            const y = row * tileSize;
+            createSvgLine(svg, 0, width, y, y);
+        }
+        for (let col = 0; col <= cols; ++col) {
+            const x = col * tileSize;
+            createSvgLine(svg, x, x, 0, height);
+        }
+        for (let row = 1; row <= rows; ++row) {
+            for (let col = 1; col <= cols; ++col) {
+                createSvgRect(svg, col, row);
+            }
+        }
+
+        svg.addEventListener('contextmenu', svgOnContextMenu);
+        svg.addEventListener('mousedown', svgOnMousedown);
+        svg.addEventListener('mouseover', svgOnMouseover);
+        svg.addEventListener('mouseout', svgOnMouseout);
+
+        deskSvgContainer.replaceChildren(svg);
+        populateSvgWithTileValues();
+    }
+
+    /**
+     * Clear current highlight and highlight next desk position for placement or the selected desk for removal.
+     * @param {TilePosition} tilePosition - Tile position.
+     * @param {boolean} singleCell - Should only highlight the position and not a desk/space.
+     */
+    function highlightSelection(tilePosition = {col: 0, row: 0}, singleCell = false) {
+        const {col, row} = tilePosition;
+
+        state.game.highlightedElements.forEach((element) => element.setAttribute('highlighted', 'false'));
+        state.game.highlightedElements = [];
+
+        const deskId = state.game.tiles[row][col];
+        if (singleCell) {
+            addTileElementToHighlight(col, row);
+        } else {
+            if (deskId > 0) {
+                for (let r = 1; r <= state.game.rows; ++r) {
+                    for (let c = 1; c <= state.game.cols; ++c) {
+                        if (state.game.tiles[r][c] === deskId) {
+                            addTileElementToHighlight(c, r);
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < state.game.deskSize; ++i) {
+                    const deskVertical = state.game.deskRotation % 2 === 0;
+                    const tileRow = row + (deskVertical ? 0 : i);
+                    const tileCol = col + (deskVertical ? i : 0);
+                    if (state.game.tiles[tileRow][tileCol] === 0) {
+                        addTileElementToHighlight(tileCol, tileRow);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Add the SVG Rect element at position <code>(col, row)</code> to the highlight list.
+     * @param {number} col - The grid X coordinate.
+     * @param {number} row - The grid Y coordinate.
+     */
+    function addTileElementToHighlight(col, row) {
+        const tileElement = document.getElementById(`tile-${row}-${col}`);
+        if (tileElement) {
+            tileElement.setAttribute('highlighted', 'true');
+            state.game.highlightedElements.push(tileElement);
+        }
+    }
+
+    /**
+     * Create an SVG Line element and add it to the parent svg.
+     *
+     * This line will be used to demarcate tile separation.
+     * @param {SVGElement} parent - The parent SVG element.
+     * @param {number} fromX - X starting point in pixels.
+     * @param {number} toX - X ending point in pixels
+     * @param {number} fromY - Y starting point in pixels.
+     * @param {number} toY - Y ending point in pixels.
+     */
+    function createSvgLine(parent, fromX, toX, fromY, toY) {
+        const result = createSvgElement('line', {
+            x1: fromX,
+            y1: fromY,
+            x2: toX,
+            y2: toY,
+            stroke: '#888888',
+            strokeWidth: 2,
+        });
+        parent.appendChild(result);
+    }
+
+    /**
+     * Create an SVG Rect element and add it the parent svg.
+     *
+     * This rect will be used to represent the state of the tile.
+     * @param {SVGElement} parent - The parent SVG element.
+     * @param {number} col - The grid X position.
+     * @param {number} row - The grid Y position.
+     */
+    function createSvgRect(parent, col, row) {
+        const x = (col - 1) * tileSize;
+        const y = (row - 1) * tileSize;
+        const result = createSvgElement('rect', {
+            id: `tile-${row}-${col}`,
+            highlighted: false,
+            isDesk: false,
+            width: tileSize,
+            height: tileSize,
+            x,
+            y,
+            fill: 'transparent',
+            col,
+            row,
+        });
+        parent.appendChild(result);
+    }
+
+    /** Reset all tiles. */
+    function clearSolution() {
+        for (let row = 1; row <= state.game.maxRows; ++row) {
+            for (let col = 1; col <= state.game.maxCols; ++col) {
+                state.game.tiles[row][col] = 0;
+            }
+        }
+        recalculateSolutionFromState();
+        populateSvgWithTileValues();
+    }
+
+    /** Reset the input and solution to a default example. */
+    function defaultLevel4Solution() {
+        levelSolution.value =
+            'X.X.X.X\n' +
+            'X.X.X.X\n' +
+            'X.X.X.X\n' +
+            '.......\n' +
+            'XXX.XXX';
+        updateSolutionField();
+    }
+
+    /** Reset the input and solution to a default example. */
+    function defaultSpiralSolution() {
+        levelSolution.value =
+            'X.X.XX\n' +
+            'X.X...\n' +
+            '....XX\n' +
+            'XX....\n' +
+            '...X.X\n' +
+            'XX.X.X';
+        updateSolutionField();
+    }
+
+    /** Reset the input and solution to a default example. */
+    function logoSolution() {
+        levelSolution.value =
+            '.........................\n' +
+            '...XXXX....XXXX....XXXX..\n' +
+            '..XX..XX..XX..XX..XX..XX.\n' +
+            '.XX......XX......XX......\n' +
+            '.XX......XX......XX......\n' +
+            '.XX......XX......XX......\n' +
+            '..XX..XX..XX..XX..XX..XX.\n' +
+            '...XXXX....XXXX....XXXX..\n' +
+            '.........................\n' +
+            '..XX.XX.....XXX...XXXXX..\n' +
+            '..XX.XX....XXXX..XX...XX.\n' +
+            '.XXXXXXX..XX.XX..XX..XXX.\n' +
+            '..XX.XX..XX..XX..XX.XXXX.\n' +
+            '.XXXXXXX.XXXXXXX.XXXX.XX.\n' +
+            '..XX.XX......XX..XXX..XX.\n' +
+            '..XX.XX.....XXXX..XXXXX..\n' +
+            '.........................';
+        updateSolutionField();
+    }
+
+    /** Recalculates the input solution string back from the internal state and populates the field. */
+    function recalculateSolutionFromState() {
+        let newSolution = '';
+        for (let row = 0; row < state.game.rows; ++row) {
+            let line = '';
+            for (let col = 0; col < state.game.cols; ++col) {
+                line += (state.game.tiles[row + 1][col + 1] > 0) ? 'X' : '.';
+            }
+            newSolution += line;
+            if (row < state.game.rows - 1) {
+                newSolution += '\n';
+            }
+        }
+        levelSolution.value = newSolution;
+        parseSolutionAndUpdateState();
+    }
+
+    /** Update the grid svg to reflect the current state. */
+    function populateSvgWithTileValues() {
+        for (let row = 1; row <= state.game.rows; ++row) {
+            for (let col = 1; col <= state.game.cols; ++col) {
+                const tileElement = document.getElementById(`tile-${row}-${col}`);
+                if (tileElement) {
+                    const tileIsDesk = state.game.tiles[row][col] > 0;
+                    tileElement.setAttribute('is-desk', `${tileIsDesk}`);
+                    tileElement.setAttribute('highlighted', 'false');
+                    tileElement.setAttribute('fill', 'transparent');
+                }
+            }
+        }
+    }
+
+    /** Update the input to reflect the current state. */
+    function recalculateInputFromState() {
+        if (state.level === 6) {
+            levelInput.value = `${state.game.cols} ${state.game.rows} ${state.game.deskCountNeeded} ${state.game.deskSize}`;
+        } else {
+            levelInput.value = `${state.game.cols} ${state.game.rows}`;
+        }
+    }
+
+    // Util
+
+    /**
+     * Extract row and col from the element attributes. Meant to be called with a svg rect.
+     * @param {HTMLElement} element - The element to extract the attributes from.
+     * @returns {TilePosition} The grid position of the element.
+     */
+    function getTilePositionFromElement(element) {
+        const col = Number.parseInt(element.getAttribute('col'));
+        const row = Number.parseInt(element.getAttribute('row'));
+        return {col, row}
+    }
+
+    /**
+     * Cleans up the input string. Trims the input and 'compresses' all adjacent spaces into one whitespace.
+     *
+     * Normalizes the break characters to just LF. Also replaces any [SPACE] LF [SPACE] to LF - to play nicely with split.
+     * @param {string} value - The input string.
+     * @returns {string} - The sanitized value.
+     */
+    function sanitizeInput(value) {
+        return value.trim()
+            .replace(/[\r\n]/g, '\n')
+            .replace(/(\s*\n\s*)/g, '\n')
+            .replace(/[^\S\n]+/g, ' ');
+    }
+
+    /**
+     * Completes the given solution to fit the input criteria.
+     *
+     * The solution must have all lines be the same length and only have '.' and 'X' as values.
+     *
+     * The number of rows is given by the number of LF characters in <code>sanitizedSolution</code>.
+     *
+     * The number of columns is given by the size of the first line in <code>sanitizedSolution</code>.
+     * @param {string} sanitizedSolution - The sanitized solution. Use {@link sanitizeInput} on the solution before calling this function.
+     * @returns {string} Normalized level solution.
+     */
+    function normalizeSolution(sanitizedSolution) {
+        const lines = sanitizedSolution.split('\n');
+        const rows = lines.length;
+        const cols = lines[0].length;
+
+        const tiles = createArray2D(cols, rows, '.');
+        for (let row = 0; row < rows; ++row) {
+            const line = lines[row];
+            for (let col = 0; col < cols && col < line.length; ++col) {
+                if (line[col] === 'X' || line[col] === 'x') {
+                    tiles[row][col] = 'X';
+                }
+            }
+        }
+
+        return tiles.map(it => it.join('')).join('\n');
+    }
+
+    /**
+     * Append the value string count times.
+     * @param {string} value - Value to append.
+     * @param {number} count - How many times to append.
+     * @returns {string} Appended value.
+     */
+    function repeat(value, count) {
+        let result = '';
+        for (let index = 0; index < count; ++index) {
+            result += value;
+        }
+        return result;
+    }
+
+    /**
+     * Create a 2D array and initialize it.
+     * @template T
+     * @param {number} cols - Number of columns.
+     * @param {number} rows - Number of rows.
+     * @param {T} [value = 0] - Value to initialize the array with.
+     * @returns {Array.<Array.<T>>} Initialized array of size rows * cols.
+     */
+    function createArray2D(cols, rows, value = 0) {
+        const result = Array(rows);
+        for (let row = 0; row < rows; ++row) {
+            result[row] = Array(cols);
+            for (let col = 0; col < cols; ++col) {
+                result[row][col] = value;
+            }
+        }
+        return result
+    }
+
+    /**
+     * Copies data from one tile map to another.
+     * @template T
+     * @param {Array.<Array.<T>>} dst - Destination 2D array, must have sized at least that of the src.
+     * @param {Array.<Array.<T>>} src - Source 2D array.
+     * @param {number} srcFromCol - Col starting position of the src 2D array.
+     * @param {number} srcToCol - Col ending position of the src 2D array.
+     * @param {number} srcFromRow - Row starting position of the src 2D array.
+     * @param {number} srcToRow - Row ending position of the src 2D array.
+     */
+    function copyArray2D(dst, src, srcFromCol, srcToCol, srcFromRow, srcToRow) {
+        for (let row = srcFromRow; row <= srcToRow; ++row) {
+            for (let col = srcFromCol; col <= srcToCol; ++col) {
+                dst[row][col] = src[row][col];
+            }
+        }
+    }
+
+    /**
+     * Clamp value between min and max.
+     * @param {number} value - Value to clamp.
+     * @param {number} min - Minimum value.
+     * @param {number} max - Maximum value.
+     * @returns {number} The clamped value.
+     */
+    function clamp(value, min, max) {
+        if (value < min) {
+            return min;
+        } else if (value > max) {
+            return max;
+        }
+        return value;
+    }
+
+    function createSvgElement(name, attributes) {
+        const element = document.createElementNS('http://www.w3.org/2000/svg', name);
+        for (let key in attributes) {
+            const keyKebabCase = key.replace(/[A-Z]/g, upperCaseLetter => '-' + upperCaseLetter.toLowerCase());
+            element.setAttributeNS(null, keyKebabCase, attributes[key]);
+        }
+        return element;
+    }
+</script>
+
+</html>
